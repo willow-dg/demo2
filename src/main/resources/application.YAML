@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: demo2
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo2?createDatabaseIfNotExist=true
+    username: root
+    password: root
+stripe:
+  apiUrl: https://api.stripe.com
+  enabled: true
+  timeout: 1000
+  supported-currencies: USD,EUR,GBP
+payment-gateway: paypal
