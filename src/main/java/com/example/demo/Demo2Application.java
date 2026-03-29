@@ -1,19 +1,18 @@
 package com.example.demo;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.SpringApplication;
+import com.example.demo.entities.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class Demo2Application {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Demo2Application.class, args);
-        var orderService = context.getBean(OrderService.class);
-
-        orderService.placeOrder();
+        var user=User.builder()
+                .name("John")
+                .email("john@example.com")
+                .password("password")
+                .build();
+        System.out.println(user.getName());
     }
 
 }
