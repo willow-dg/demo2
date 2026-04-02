@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tags")
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,10 +17,15 @@ public class Tag {
 
     @Id
     @Column(name = "id")
-    private Long tag;
+    private Long id;
     @Column(name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "tags")
+    @ToString.Exclude
     private Set<User> users = new HashSet<>();
+
+    public Tag(String name) {
+        this.name = name;
+    }
 }

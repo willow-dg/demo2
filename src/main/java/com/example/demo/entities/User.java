@@ -32,12 +32,18 @@ public class User {
     private List<Address> addresses = new ArrayList<>();
 
     @ManyToMany
+    @Builder.Default
     @JoinTable(
             name = "user_tags",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
+
+
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+
 
     public void addAddress(Address address) {
         addresses.add(address);
@@ -49,6 +55,19 @@ public class User {
         address.setUser(null);
     }
 
+    public void addTag(String tagName) {
+        var tag= new Tag(tagName);
+        tags.add(tag);
+        tag.getUsers().add(this);
+    }
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getUsers().remove(this);
+    }
 
+    public void addProfile(Profile profile) {
+        this.profile = profile;
+        profile.setUser(this);
+    }
 
 }

@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
+@Builder
 @Entity
 @Table(name = "profiles")
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class profile {
+public class Profile {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)//自动排序
@@ -23,4 +25,10 @@ public class profile {
     private LocalDate dateOfBirth;
     @Column(name = "loyalty_points")
     private Integer loyaltyPoints;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    @ToString.Exclude
+    private User user;
 }
