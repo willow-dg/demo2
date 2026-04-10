@@ -1,42 +1,26 @@
 package com.example.demo;
 
-import com.example.demo.entities.Address;
-import com.example.demo.entities.Profile;
-import com.example.demo.entities.User;
+
+import com.example.demo.entities.Category;
+import com.example.demo.entities.Product;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class Demo2Application {
 
     public static void main(String[] args) {
-        var user = User.builder()
-                .name("John")
-                .email("john@example.com")
-                .password("password")
+
+        var product = Product.builder()
+                .name("product")
                 .build();
 
-        var address = Address.builder()
-                .street("street")
-                .city("city")
-                .state("state")
-                .zip("zip")
-                .build();
+        var category= new Category("category");
 
-        user.addTag("tag1");
+        product.setCategory(category);
+        category.getProducts().add(product);
 
-        var profile = Profile.builder()
-                .bio("profile")
-                .build();
+        System.out.println(category);
 
-        user.addProfile(profile);
-
-        user.addAddress(address);
-        System.out.println(user);
     }
-
-
-//    public static void main(String[] args) {
-//        SpringApplication.run(Demo2Application.class, args);
-//    }
-
 }
