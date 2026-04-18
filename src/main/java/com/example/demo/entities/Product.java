@@ -2,13 +2,17 @@ package com.example.demo.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.LifecycleState;
+import org.springframework.resilience.annotation.EnableResilientMethods;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Getter
 @Setter
 @Entity
@@ -18,13 +22,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "category_id")
+    @ToString.Exclude
     private Category category;
+
+    @ManyToMany(mappedBy = "products")
+    private List<User> users = new ArrayList<>();
+
+
+
 }

@@ -15,8 +15,9 @@ import lombok.*;
 @ToString
 public class Address {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)//自动排序
+//    @GeneratedValue(strategy = GenerationType.AUTO)//自动排序
     private Long id;
 
     @Column(name = "street")

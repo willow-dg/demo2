@@ -1,35 +1,40 @@
 package com.example.demo.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-@ToString
-@Entity
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Table(name = "categories")
 public class Category {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Byte id;
+
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    @ToString.Exclude
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "category",cascade = CascadeType.PERSIST,orphanRemoval = true)
+    @Builder.Default
+    private Set<Product> products = new HashSet<>();
 
-    public Category(String name) {
-        this.name = name;
+    public void addProduct(Product product) {
+        this.products.add(product);
+        product.setCategory(this);
+    }
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+        product.setCategory(null);
     }
 
 }

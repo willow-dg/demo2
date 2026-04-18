@@ -18,7 +18,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)//自动排序
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//自动排序
     private long id;
     @Column(name = "name")
     private String name;
@@ -27,10 +27,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
+    @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
-
     @ManyToMany
     @Builder.Default
     @JoinTable(
@@ -38,36 +38,25 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
-
-
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
     private Profile profile;
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist",
+            joinColumns =  @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
 
+    )
+    private List<Product> products = new ArrayList<>();
 
     public void addAddress(Address address) {
-        addresses.add(address);
+        this.addresses.add(address);
         address.setUser(this);
     }
-
     public void removeAddress(Address address) {
-        addresses.remove(address);
+        this.addresses.remove(address);
         address.setUser(null);
     }
-
-    public void addTag(String tagName) {
-        var tag= new Tag(tagName);
-        tags.add(tag);
-        tag.getUsers().add(this);
-    }
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-        tag.getUsers().remove(this);
-    }
-
-    public void addProfile(Profile profile) {
-        this.profile = profile;
-        profile.setUser(this);
-    }
-
 }

@@ -1,26 +1,21 @@
 package com.example.demo;
 
 
-import com.example.demo.entities.Category;
-import com.example.demo.entities.Product;
+import com.example.demo.services.ProductService;
+import com.example.demo.services.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class Demo2Application {
 
     public static void main(String[] args) {
 
-        var product = Product.builder()
-                .name("product")
-                .build();
+        ApplicationContext context = SpringApplication.run(Demo2Application.class, args);
+        var service = context.getBean(ProductService.class);
+        service.removeRelated();
 
-        var category= new Category("category");
-
-        product.setCategory(category);
-        category.getProducts().add(product);
-
-        System.out.println(category);
 
     }
 }
