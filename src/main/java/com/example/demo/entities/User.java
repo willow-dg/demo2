@@ -12,7 +12,6 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Builder
 @Table(name = "users")
@@ -58,5 +57,13 @@ public class User {
     public void removeAddress(Address address) {
         this.addresses.remove(address);
         address.setUser(null);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
     }
 }

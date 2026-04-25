@@ -49,4 +49,9 @@ public class ProductService {
         categoryRepository.save(category);
     }
 
+    @Transactional
+    public void updateProductPrice(){
+        productRepository.updatePriceByCategory((byte) 1, BigDecimal.valueOf(1024.36));
+    }
+
 }

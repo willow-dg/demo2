@@ -28,6 +28,10 @@ public class Category {
     @Builder.Default
     private Set<Product> products = new HashSet<>();
 
+    public Category(byte b) {
+        this.id = b;
+    }
+
     public void addProduct(Product product) {
         this.products.add(product);
         product.setCategory(this);

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+//@ToString
 @Getter
 @Setter
 @Entity
@@ -38,6 +38,7 @@ public class Product {
     private Category category;
 
     @ManyToMany(mappedBy = "products")
+    @ToString.Exclude
     private List<User> users = new ArrayList<>();
 
 
