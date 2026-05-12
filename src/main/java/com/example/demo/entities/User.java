@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "users")
-@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自动排序
@@ -49,11 +48,11 @@ public class User {
         address.setUser(null);
     }
 
-//    @Override
-//    public String toString() {
-//        return getClass().getSimpleName() + "(" +
-//                "id = " + id + ", " +
-//                "name = " + name + ", " +
-//                "email = " + email + ")";
-//    }
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
+    }
 }

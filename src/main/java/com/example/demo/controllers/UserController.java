@@ -5,10 +5,12 @@ import com.example.demo.dtos.UserDto;
 import com.example.demo.mappers.UserMapper;
 import com.example.demo.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
 
@@ -45,9 +47,16 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody RegisterUserRequest request) {
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder) {
         var user = userMapper.toEntity(request);
-        System.out.println(user);
-        return null;
+        userRepository.save(user);
+        var userDto = userMapper.toDto(user);
+        var uri = uriBuilder.path("/users/{id}")
+                .buildAndExpand(userDto.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(userDto);
     }
 }
