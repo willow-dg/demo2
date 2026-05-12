@@ -6,7 +6,6 @@ import com.example.demo.dtos.UserDto;
 import com.example.demo.mappers.UserMapper;
 import com.example.demo.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -73,5 +72,15 @@ public class UserController {
         userMapper.updateEntity(request,user);
         userRepository.save(user);
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.delete(user);
+        return ResponseEntity.noContent().build();
     }
 }
