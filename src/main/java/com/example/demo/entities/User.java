@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -15,6 +13,7 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "users")
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自动排序
@@ -30,15 +29,6 @@ public class User {
     @Builder.Default
     @ToString.Exclude
     private List<Address> addresses = new ArrayList<>();
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(
-            name = "user_tags",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    @ToString.Exclude
-    private Set<Tag> tags = new HashSet<>();
     @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
     private Profile profile;
     @ManyToMany
@@ -59,11 +49,11 @@ public class User {
         address.setUser(null);
     }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "name = " + name + ", " +
-                "email = " + email + ")";
-    }
+//    @Override
+//    public String toString() {
+//        return getClass().getSimpleName() + "(" +
+//                "id = " + id + ", " +
+//                "name = " + name + ", " +
+//                "email = " + email + ")";
+//    }
 }

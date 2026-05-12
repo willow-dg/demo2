@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +28,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.PERSIST,orphanRemoval = true)
     @Builder.Default
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
     public Category(byte b) {
