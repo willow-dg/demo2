@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.RegisterUserRequest;
+import com.example.demo.dtos.UpdateUserRequest;
 import com.example.demo.dtos.UserDto;
 import com.example.demo.mappers.UserMapper;
 import com.example.demo.repositories.UserRepository;
@@ -58,5 +59,19 @@ public class UserController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequest request
+            ){
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        userMapper.updateEntity(request,user);
+        userRepository.save(user);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }
