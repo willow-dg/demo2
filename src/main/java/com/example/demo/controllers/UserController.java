@@ -6,14 +6,16 @@ import com.example.demo.dtos.UpdateUserRequest;
 import com.example.demo.dtos.UserDto;
 import com.example.demo.mappers.UserMapper;
 import com.example.demo.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -22,7 +24,7 @@ import java.util.Set;
 public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public Iterable<UserDto> getAllUsers(
@@ -49,10 +51,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest request,
+    public ResponseEntity<?> registerUser(
+            @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder) {
+        if (userRepository.existsByEmail(request.getEmail())){
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "Email already exists")
+            );
+        }
+
         var user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         var userDto = userMapper.toDto(user);
         var uri = uriBuilder.path("/users/{id}")
@@ -103,4 +112,6 @@ public class UserController {
         userRepository.save(user);
         return ResponseEntity.noContent().build();
     }
+
+
 }

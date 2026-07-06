@@ -2,8 +2,6 @@ package com.example.demo.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.LifecycleState;
-import org.springframework.resilience.annotation.EnableResilientMethods;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,6 +39,8 @@ public class Product {
     @ToString.Exclude
     private List<User> users = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
 
 
 }
