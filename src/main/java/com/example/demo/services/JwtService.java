@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -28,19 +29,23 @@ public class JwtService {
 
     public boolean validateToken(String token) {
         try{
-            var claims = Jwts.parser()
-                    //指定使用的密钥
-                    .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
-                    //构建器
-                    .build()
-                    //解析token
-                    .parseSignedClaims(token)
-                    //负载
-                    .getPayload();
+            var claims = getClaims(token);
             return claims.getExpiration().after(new Date());
         }catch (JwtException e){
             return false;
-        }
+            }
     }
 
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+
+                .getPayload();
+    }
+
+    public String getEmailFromToken(String token) {
+        return getClaims(token).getSubject();
+    }
 }
