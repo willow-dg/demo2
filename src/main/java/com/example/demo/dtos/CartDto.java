@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import com.example.demo.entities.OrderItem;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,5 +13,6 @@ public class CartDto {
     private UUID id;
     private List<CartItemDto> items = new ArrayList<>();
     private BigDecimal totalPrice = BigDecimal.ZERO;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
 }

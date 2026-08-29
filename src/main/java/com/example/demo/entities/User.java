@@ -13,16 +13,25 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自动排序
-    private long id;
+    @EqualsAndHashCode.Include
+    private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)//以字符串类型存储数据库
+    private Role role;
 
     @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
@@ -55,4 +64,5 @@ public class User {
                 "name = " + name + ", " +
                 "email = " + email + ")";
     }
+
 }

@@ -1,10 +1,7 @@
 package com.example.demo.controllers;
 
 
-import com.example.demo.dtos.AddItemToCartRequest;
-import com.example.demo.dtos.CartDto;
-import com.example.demo.dtos.CartItemDto;
-import com.example.demo.dtos.UpdateCartItemRequest;
+import com.example.demo.dtos.*;
 import com.example.demo.exceptions.CartNotFoundException;
 import com.example.demo.exceptions.ProductNotFoundException;
 import com.example.demo.services.CartService;
@@ -93,8 +90,6 @@ public class CartController {
     public ResponseEntity<Map<String, String>> handleProductNotFound() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Product not found in the cart."));
     }
-
-
 
 
 }

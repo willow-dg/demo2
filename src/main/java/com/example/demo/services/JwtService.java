@@ -1,51 +1,57 @@
 package com.example.demo.services;
 
+import com.example.demo.config.JwtConfig;
+import com.example.demo.entities.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@AllArgsConstructor
 @Service
 public class JwtService {
-    @Value("${spring.jwt.secret}")
-    private String secret;
 
-    public String generateToken(String email) {
-        final long tokenExpiration = 86400;// 1 day
-        return Jwts.builder()
-                .subject(email)/*唯一标识*/
-                .issuedAt(new Date())/*时间戳*/
-                /*过期时间*/
-                /*使用的是毫秒*/
-                .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-                /*密钥签名*/
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
-                .compact();
+    private JwtConfig jwtConfig;
+
+    public Jwt generateAccessToken(User user) {
+        return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public boolean validateToken(String token) {
+    public Jwt generateRefreshToken(User user) {
+        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    private Jwt generateToken(User user, long tokenExpiration) {
+        var claims = Jwts.claims()
+                .subject(user.getId().toString())
+                .add("email",user.getEmail())
+                .add("name",user.getName())
+                .add("role",user.getRole())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
+                .build();
+
+        return new Jwt(claims,jwtConfig.getSecretKey());
+    }
+
+    public Jwt parseToken(String token) {
         try{
             var claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-        }catch (JwtException e){
-            return false;
-            }
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        } catch (Exception e) {
+            throw null;//??
+        }
     }
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
 
                 .getPayload();
     }
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
-    }
 }
